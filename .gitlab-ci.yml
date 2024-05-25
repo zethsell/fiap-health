@@ -1,0 +1,81 @@
+variables:
+  CERT_DIR: "/certs"
+  IMAGE_NAMESPACE: "zeth"
+  IMAGE_NAME_API: 'placefy_api'
+  IMAGE_NAME_APP: 'placefy_app'
+
+stages:
+  - build
+  - deploy
+
+.tpl_build_docker: &tpl_build_docker
+  variables:
+    DOCKER_TLS_CERTDIR: ${CERT_DIR}
+  image: docker:25.0.1
+  services:
+    - docker:25.0.1-dind
+  before_script:
+    - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
+
+build_api:
+  <<: *tpl_build_docker
+  stage: build
+  script:
+    - docker build -t ${IMAGE_NAMESPACE}/${IMAGE_NAME_API} api/.
+    - docker push "${IMAGE_NAMESPACE}/${IMAGE_NAME_API}"
+  only:
+    - main
+    - production
+
+build_app:
+  <<: *tpl_build_docker
+  stage: build
+  script:
+    - docker build -t ${IMAGE_NAMESPACE}/${IMAGE_NAME_APP} app/.
+    - docker push "${IMAGE_NAMESPACE}/${IMAGE_NAME_APP}"
+  only:
+    - main
+    - production
+
+deploy_main:
+  stage: deploy
+  before_script:
+    - chmod +x ./scripts/install-k8s.sh
+    - chmod +x ./scripts/install-doctl.sh
+  script:
+    - ./scripts/install-k8s.sh
+    - ./scripts/install-doctl.sh
+    - doctl auth init --access-token $DO_TOKEN
+    - doctl kubernetes cluster kubeconfig save $K8S_CONTEXT
+    - doctl auth switch
+    - kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.7.1/deploy/static/provider/cloud/deploy.yaml
+    - kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission
+    - kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.7.1/cert-manager.yaml
+    - kubectl -n ingress-nginx patch services ingress-nginx-controller -p '{"spec":{"externalTrafficPolicy":"Cluster"}}'
+    - kubectl apply -f ./k8s/production/api-depl.yaml
+    - kubectl apply -f ./k8s/production/app-depl.yaml
+    - kubectl apply -f ./k8s/production/letsencrypt-issuer.yaml
+    - kubectl apply -f ./k8s/production/ingress-srv.yaml
+    - kubectl rollout restart deployment api-depl
+    - kubectl rollout restart deployment app-depl
+    - kubectl get services -A
+  only:
+    - main
+
+deploy_production:
+  stage: deploy
+  before_script:
+    - chmod +x ./scripts/install-k8s.sh
+    - chmod +x ./scripts/install-doctl.sh
+  script:
+    - ./scripts/install-k8s.sh
+    - ./scripts/install-doctl.sh
+    - doctl auth init --access-token $DO_TOKEN
+    - doctl kubernetes cluster kubeconfig save $K8S_CONTEXT
+    - doctl auth switch
+    - kubectl apply -f ./k8s/production
+    - kubectl rollout restart deployment api-depl
+    - kubectl rollout restart deployment app-depl
+    - kubectl get services -A
+  only:
+    - production

@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+        - name: app
+          image: zeth/fiap-health-app-prod
+          env:
+            - name: CEP_API_URL
+              value: "https://brasilapi.com.br/api/cep/v1/"
+            - name: CNPJ_API_URL
+              value: "https://brasilapi.com.br/api/cnpj/v1/"
+            - name: GOOGLE_MAPS_API_KEY
+              value: "AIzaSyBnd5pwbmwhElN__wYtGkmilH0JBjAFEk0"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-srv
+spec:
+  selector:
+    app: app
+  ports:
+    - name: app
+      protocol: TCP
+      port: 80
+      targetPort: 80
