@@ -18,7 +18,7 @@ export class ConsultInsertController {
   async handle(@Body() data: InsertConsultDto) {
     try {
       const instance = this.clientProxy.getInstance('consults')
-      instance.emit('consult-update', data).subscribe()
+      instance.emit('consult-store', data).subscribe()
     } catch (err) {
       throw new BadRequestException(err.message)
     }

@@ -6,19 +6,19 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common'
-import { InsertUserDto } from '../dtos'
+import { InsertExamDto } from '../dtos'
 import { ClientProxyRMQ } from '../../proxy'
 
-@Controller('api/users')
-export class UserInsertController {
+@Controller('api/exams')
+export class ExamInsertController {
   constructor(private readonly clientProxy: ClientProxyRMQ) {}
 
   @Post()
   @UsePipes(ValidationPipe)
-  async handle(@Body() data: InsertUserDto) {
+  async handle(@Body() data: InsertExamDto) {
     try {
-      const instance = this.clientProxy.getInstance('users')
-      instance.emit('user-store', data).subscribe()
+      const instance = this.clientProxy.getInstance('exams')
+      instance.emit('exam-store', data).subscribe()
     } catch (err) {
       throw new BadRequestException(err.message)
     }
