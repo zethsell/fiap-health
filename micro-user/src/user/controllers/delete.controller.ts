@@ -16,9 +16,10 @@ export class UserDeleteController extends BaseController {
     const originalMsg = context.getMessage();
     try {
       await this.service.run({ id });
-      await channel.ack(originalMsg);
     } catch (error) {
       await this.parseError(error, channel, originalMsg);
+    } finally {
+      await channel.ack(originalMsg);
     }
   }
 }

@@ -1,6 +1,4 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
-import { UniqueValidator } from '../../common/validators';
-import { UserEntity } from '../../database/entities';
 
 export class InsertUserDto {
   @IsNotEmpty()
@@ -13,6 +11,5 @@ export class InsertUserDto {
 
   @IsNotEmpty()
   @IsEmail()
-  @UniqueValidator(UserEntity, 'email')
   email: string;
 }

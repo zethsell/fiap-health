@@ -16,9 +16,10 @@ export class UserInsertController extends BaseController {
     const originalMsg = context.getMessage();
     try {
       await this.service.run(user);
-      await channel.ack(originalMsg);
     } catch (error) {
       await this.parseError(error, channel, originalMsg);
+    } finally {
+      await channel.ack(originalMsg);
     }
   }
 }
