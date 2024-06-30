@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common'
-import { SignUpController } from './controllers'
-import { SignUpService } from './services'
+import { SignInController, SignUpController } from './controllers'
+import { SignInService, SignUpService } from './services'
+import { ProxyModule } from '../proxy'
+import { AxiosHttpClient, GoogleAuthApi } from '../gateways'
 
 @Module({
-  controllers: [SignUpController],
-  providers: [SignUpService],
-  imports: [],
+  controllers: [SignUpController, SignInController],
+  providers: [SignUpService, SignInService, GoogleAuthApi, AxiosHttpClient],
+  imports: [ProxyModule],
 })
 export class AuthModule {}

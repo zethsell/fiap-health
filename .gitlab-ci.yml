@@ -1,8 +1,12 @@
 variables:
   CERT_DIR: "/certs"
   IMAGE_NAMESPACE: "zeth"
-  IMAGE_NAME_API: 'placefy_api'
-  IMAGE_NAME_APP: 'placefy_app'
+  IMAGE_NAME_API: 'fiap-health-api-prod'
+  IMAGE_NAME_APP: 'fiap-health-app-prod'
+  IMAGE_NAME_MICRO_CONSULT: 'fiap-health-micro-consult-prod'
+  IMAGE_NAME_MICRO_EXAM: 'fiap-health-micro-exam-prod'
+  IMAGE_NAME_MICRO_SCHEDULE: 'fiap-health-micro-schedule-prod'
+  IMAGE_NAME_MICRO_USER: 'fiap-health-micro-user-prod'
 
 stages:
   - build
@@ -16,6 +20,45 @@ stages:
     - docker:25.0.1-dind
   before_script:
     - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
+
+build_micro_consult:
+  <<: *tpl_build_docker
+  stage: build
+  script:
+    - docker build -t ${IMAGE_NAMESPACE}/${IMAGE_NAME_MICRO_CONSULT} micro-consult/.
+    - docker push "${IMAGE_NAMESPACE}/${IMAGE_NAME_MICRO_CONSULT}"
+  only:
+    - main
+    - production
+
+build_micro_exam:
+  <<: *tpl_build_docker
+  stage: build
+  script:
+    - docker build -t ${IMAGE_NAMESPACE}/${IMAGE_NAME_MICRO_EXAM} micro-exam/.
+    - docker push "${IMAGE_NAMESPACE}/${IMAGE_NAME_MICRO_EXAM}"
+  only:
+    - main
+    - production
+build_micro_schedule:
+  <<: *tpl_build_docker
+  stage: build
+  script:
+    - docker build -t ${IMAGE_NAMESPACE}/${IMAGE_NAME_MICRO_SCHEDULE} micro-schedule/.
+    - docker push "${IMAGE_NAMESPACE}/${IMAGE_NAME_MICRO_SCHEDULE}"
+  only:
+    - main
+    - production
+build_micro_user:
+  <<: *tpl_build_docker
+  stage: build
+  script:
+    - docker build -t ${IMAGE_NAMESPACE}/${IMAGE_NAME_MICRO_USER} micro-user/.
+    - docker push "${IMAGE_NAMESPACE}/${IMAGE_NAME_MICRO_USER}"
+  only:
+    - main
+    - production
+
 
 build_api:
   <<: *tpl_build_docker
@@ -52,10 +95,7 @@ deploy_main:
     - kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission
     - kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.7.1/cert-manager.yaml
     - kubectl -n ingress-nginx patch services ingress-nginx-controller -p '{"spec":{"externalTrafficPolicy":"Cluster"}}'
-    - kubectl apply -f ./k8s/production/api-depl.yaml
-    - kubectl apply -f ./k8s/production/app-depl.yaml
-    - kubectl apply -f ./k8s/production/letsencrypt-issuer.yaml
-    - kubectl apply -f ./k8s/production/ingress-srv.yaml
+    - kubectl apply -f ./k8s
     - kubectl rollout restart deployment api-depl
     - kubectl rollout restart deployment app-depl
     - kubectl get services -A
@@ -73,7 +113,7 @@ deploy_production:
     - doctl auth init --access-token $DO_TOKEN
     - doctl kubernetes cluster kubeconfig save $K8S_CONTEXT
     - doctl auth switch
-    - kubectl apply -f ./k8s/production
+    - kubectl apply -f ./k8s
     - kubectl rollout restart deployment api-depl
     - kubectl rollout restart deployment app-depl
     - kubectl get services -A

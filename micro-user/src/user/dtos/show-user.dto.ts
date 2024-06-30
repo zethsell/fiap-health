@@ -1,3 +1,4 @@
 export class ShowUserDto {
-  id: string;
+  id?: string
+  email?: string
 }

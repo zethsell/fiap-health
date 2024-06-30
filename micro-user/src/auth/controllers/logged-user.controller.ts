@@ -1,12 +1,7 @@
-import { Controller } from '@nestjs/common';
-import { LoggedUserService } from '../services';
-import {
-  Ctx,
-  MessagePattern,
-  Payload,
-  RmqContext,
-} from '@nestjs/microservices';
-import { LoggedUserDto } from '../dtos/logged-user.dto';
+import { Controller } from '@nestjs/common'
+import { LoggedUserService } from '../services'
+import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
+import { LoggedUserDto } from '../dtos/logged-user.dto'
 
 @Controller('api/v1')
 export class LoggedUserController {
@@ -14,12 +9,12 @@ export class LoggedUserController {
 
   @MessagePattern('user-logged')
   async handle(@Payload() data: LoggedUserDto, @Ctx() context: RmqContext) {
-    const channel = context.getChannelRef();
-    const originalMsg = context.getMessage();
+    const channel = context.getChannelRef()
+    const originalMsg = context.getMessage()
     try {
-      return await this.service.run(data);
+      return await this.service.run(data)
     } finally {
-      await channel.ack(originalMsg);
+      await channel.ack(originalMsg)
     }
   }
 }

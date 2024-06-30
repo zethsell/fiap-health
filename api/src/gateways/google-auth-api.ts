@@ -14,7 +14,9 @@ import {
 import { AuthenticationError, RegistrationError } from '../common/errors'
 import { AxiosHttpClient } from './axios-client'
 import { googleConstants } from '../common/constants/google-constants'
+import { Injectable } from '@nestjs/common'
 
+@Injectable()
 export class GoogleAuthApi
   implements
     GoogleResetPassword,
@@ -98,6 +100,7 @@ export class GoogleAuthApi
       tenantId: this.getTenantId(),
     }
     const params = this.createParams()
+
     return await this.httpClient.post({ url, body, params }).catch(() => {
       throw new RegistrationError()
     })

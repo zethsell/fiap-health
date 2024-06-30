@@ -4,14 +4,21 @@ import {
   SaveUser,
   ShowUser,
   ShowUserByConditions,
-} from './contracts';
-import { UserEntity } from '../database/entities';
-import { Repository } from 'typeorm';
-import { Inject } from '@nestjs/common';
-import { RepositoryEnum } from '../common/enums';
+  ShowUserByEmail,
+} from './contracts'
+import { UserEntity } from '../database/entities'
+import { Repository } from 'typeorm'
+import { Inject } from '@nestjs/common'
+import { RepositoryEnum } from '../common/enums'
 
 export class UserRepository
-  implements ListUsers, ShowUser, SaveUser, DeleteUser, ShowUserByConditions
+  implements
+    ListUsers,
+    ShowUser,
+    SaveUser,
+    DeleteUser,
+    ShowUserByConditions,
+    ShowUserByEmail
 {
   constructor(
     @Inject(RepositoryEnum.USER_REPOSITORY)
@@ -19,11 +26,17 @@ export class UserRepository
   ) {}
 
   async get(): Promise<ListUsers.Output> {
-    return await this.repository.find();
+    return await this.repository.find()
   }
 
   async show({ id }: ShowUser.Input): Promise<ShowUser.Output> {
-    return await this.repository.findOne({ where: { id } });
+    return await this.repository.findOne({ where: { id } })
+  }
+
+  async showByEmail({
+    email,
+  }: ShowUserByEmail.Input): Promise<ShowUserByEmail.Output> {
+    return await this.repository.findOne({ where: { email } })
   }
 
   async showByConditions({
@@ -34,21 +47,22 @@ export class UserRepository
       .leftJoinAndSelect('user.auth', 'auth')
       .where((qb) => {
         if (conditions) {
-          qb.where('1 = 1');
+          qb.where('1 = 1')
+          console.log(conditions, 'conditions')
           Object.entries(conditions).forEach(([key, value]) => {
-            qb.andWhere({ [key]: value });
-          });
+            qb.andWhere({ [key]: value })
+          })
         }
       })
-      .getOne();
+      .getOne()
   }
 
   async save(input: SaveUser.Input): Promise<SaveUser.Output> {
-    await this.repository.save(input);
-    return this.show({ id: input.id });
+    await this.repository.save(input)
+    return this.show({ id: input.id })
   }
 
   async delete({ id }: DeleteUser.Input): Promise<void> {
-    await this.repository.softDelete(id);
+    await this.repository.softDelete(id)
   }
 }

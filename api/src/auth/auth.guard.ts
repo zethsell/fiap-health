@@ -8,11 +8,12 @@ import {
 import { Request } from 'express'
 import { Reflector } from '@nestjs/core'
 import { IS_PUBLIC_KEY } from '../common/decorators'
+import { GoogleAuthApi } from '../gateways'
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
-    // private jwtService: JwtService,
+    private gcp: GoogleAuthApi,
     private reflector: Reflector,
   ) {}
 
@@ -25,10 +26,15 @@ export class AuthGuard implements CanActivate {
       return true
     }
 
-    const request = context.switchToHttp().getRequest()
-    const token = this.extractTokenFromHeader(request)
-    if (!token) throw new UnauthorizedException()
     try {
+      const request = context.switchToHttp().getRequest()
+      const token = this.extractTokenFromHeader(request)
+
+      if (!token) throw new UnauthorizedException()
+
+      const response = await this.gcp.verifyUser({ idToken: token })
+      if (response === undefined) throw new UnauthorizedException()
+
       // const payload = await this.jwtService.verifyAsync(token, {
       //   secret: jwtConstants.secret,
       // })

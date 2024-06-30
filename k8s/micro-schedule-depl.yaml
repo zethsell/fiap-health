@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - name: api
+          image: zeth/fiap-health-micro-schedule-prod
+          env:
+            - name: RABBITMQ_URL
+              value: "amqps://ggwgsquk:UJTYEV9Au0QbnKnFIe_D8mv-qwgIkSHN@jackal.rmq.cloudamqp.com/ggwgsquk"
+            - name: MONGO_URL
+              value: "mongodb+srv://marcio:BjcLu1P2lJNwezcB@sandbox.r5laqxf.mongodb.net/?retryWrites=true&w=majority&appName=sandbox"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-srv
+spec:
+  selector:
+    app: api
+  ports:
+    - name: api
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

@@ -10,10 +10,7 @@ export const googleConstants = {
   },
   storage: {
     bucket: process.env.GCP_STORAGE_BUCKET_NAME!,
-    credentials:
-      process.env.GCP_CREDENTIAL_BUCKET !== undefined
-        ? JSON.parse(process.env.GCP_CREDENTIAL_BUCKET)
-        : undefined,
+    credentials: process.env.GCP_CREDENTIAL_BUCKET,
     folder: process.env.GCP_STORAGE_FOLDER_INTO_BUCKET!,
   },
 }
