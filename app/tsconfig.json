@@ -1,4 +1,18 @@
 {
   // https://nuxt.com/docs/guide/concepts/typescript
-  "extends": "./.nuxt/tsconfig.json"
+  "extends": "./.nuxt/tsconfig.json",
+  "lib": [
+    "esnext"
+  ],
+  "module": "esnext",
+  "target": "esnext",
+  "moduleResolution": "bundler",
+  "noEmit": true,
+  "allowImportingTsExtensions": true,
+  "moduleDetection": "force",
+  "allowJs": true,
+  "esModuleInterop": true,
+  "strict": true,
+  "forceConsistentCasingInFileNames": true,
+  "skipLibCheck": true
 }

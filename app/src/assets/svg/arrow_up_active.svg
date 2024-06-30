@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="4411 265 20 20">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+    </style>
+  </defs>
+  <g id="arrow_up" transform="translate(3961)">
+    <path id="path" d="M79,23l5,6,5-6Z" transform="translate(544 301) rotate(180)"/>
+    <rect id="Rectangle_109" data-name="Rectangle 109" class="cls-1" width="20" height="20" transform="translate(450 265)"/>
+  </g>
+</svg>

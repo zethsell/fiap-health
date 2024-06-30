@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="5382 -1309.5 24 24">
+  <defs>
+    <style>
+      .cls-1 {
+        opacity: 1;
+      }
+
+      .cls-2 {
+        fill: none;
+      }
+    </style>
+  </defs>
+  <g id="ic_search_" data-name="ic_search " class="cls-1" transform="translate(5350.35 -1357.2)">
+    <rect id="square" class="cls-2" width="24" height="24" transform="translate(31.65 47.7)"/>
+    <path id="path" d="M46.9,61.7h-.8l-.3-.3a6.259,6.259,0,0,0,1.6-4.2,6.5,6.5,0,1,0-6.5,6.5,6.259,6.259,0,0,0,4.2-1.6l.3.3v.8l5,5,1.5-1.5Zm-6,0a4.5,4.5,0,1,1,4.5-4.5A4.481,4.481,0,0,1,40.9,61.7Z" transform="translate(0.25)"/>
+  </g>
+</svg>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+    <symbol viewBox="2612 4 24 24" id="ic_expand_more">
+        <g transform="rotate(180,1586.5,53)">
+            <path transform="translate(537,78)"
+                  d="M 12,8 6,14 7.4,15.4 12,10.8 16.6,15.4 18,14 Z" class="cls-2" id="path"/>
+        </g>
+    </symbol>
+</svg>
