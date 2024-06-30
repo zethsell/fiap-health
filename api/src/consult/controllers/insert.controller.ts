@@ -8,7 +8,10 @@ import {
 } from '@nestjs/common'
 import { InsertConsultDto } from '../dtos'
 import { ClientProxyRMQ } from '../../proxy'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
+@ApiBearerAuth()
+@ApiTags('Consultas')
 @Controller('api/consults')
 export class ConsultInsertController {
   constructor(private readonly clientProxy: ClientProxyRMQ) {}

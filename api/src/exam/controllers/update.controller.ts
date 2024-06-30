@@ -10,7 +10,10 @@ import {
 import { UpdateExamDto } from '../dtos'
 import { ParamValidationPipe } from '../../common/pipes'
 import { ClientProxyRMQ } from '../../proxy'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
+@ApiBearerAuth()
+@ApiTags('Exames')
 @Controller('api/exams')
 export class ExamUpdateController {
   constructor(private readonly clientProxy: ClientProxyRMQ) {}

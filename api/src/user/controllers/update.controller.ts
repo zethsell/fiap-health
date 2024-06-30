@@ -10,7 +10,10 @@ import {
 import { UpdateUserDto } from '../dtos'
 import { ParamValidationPipe } from '../../common/pipes'
 import { ClientProxyRMQ } from '../../proxy'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
+@ApiBearerAuth()
+@ApiTags('Usuários')
 @Controller('api/users')
 export class UserUpdateController {
   constructor(private readonly clientProxy: ClientProxyRMQ) {}

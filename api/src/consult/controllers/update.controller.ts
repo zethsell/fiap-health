@@ -10,11 +10,14 @@ import {
 import { UpdateConsultDto } from '../dtos'
 import { ParamValidationPipe } from '../../common/pipes'
 import { ClientProxyRMQ } from '../../proxy'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
+@ApiTags('Consultas')
 @Controller('api/consults')
 export class ConsultUpdateController {
   constructor(private readonly clientProxy: ClientProxyRMQ) {}
 
+  @ApiBearerAuth()
   @Put('/:id')
   @UsePipes(ValidationPipe)
   async handle(

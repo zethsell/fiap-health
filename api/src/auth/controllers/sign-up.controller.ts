@@ -11,7 +11,9 @@ import {
 import { SignUpService } from '../services'
 import { SignUpDto } from '../dtos'
 import { Public } from '../../common/decorators'
+import { ApiTags } from '@nestjs/swagger'
 
+@ApiTags('Autenticação')
 @Controller('api/auth')
 export class SignUpController {
   constructor(private authService: SignUpService) {}

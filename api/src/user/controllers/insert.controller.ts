@@ -8,7 +8,10 @@ import {
 } from '@nestjs/common'
 import { InsertUserDto } from '../dtos'
 import { ClientProxyRMQ } from '../../proxy'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
+@ApiBearerAuth()
+@ApiTags('Usuários')
 @Controller('api/users')
 export class UserInsertController {
   constructor(private readonly clientProxy: ClientProxyRMQ) {}

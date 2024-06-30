@@ -7,7 +7,10 @@ import {
 } from '@nestjs/common'
 import { ClientProxyRMQ } from '../../proxy'
 import { ParamValidationPipe } from '../../common/pipes'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
+@ApiBearerAuth()
+@ApiTags('Usuários')
 @Controller('api/users')
 export class UserDeleteController {
   constructor(private readonly clientProxy: ClientProxyRMQ) {}

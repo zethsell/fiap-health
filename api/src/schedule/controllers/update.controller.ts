@@ -10,7 +10,10 @@ import {
 import { UpdateScheduleDto } from '../dtos'
 import { ParamValidationPipe } from '../../common/pipes'
 import { ClientProxyRMQ } from '../../proxy'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
+@ApiBearerAuth()
+@ApiTags('Agendamentos')
 @Controller('api/schedules')
 export class ScheduleUpdateController {
   constructor(private readonly clientProxy: ClientProxyRMQ) {}

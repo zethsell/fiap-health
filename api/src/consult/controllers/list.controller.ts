@@ -1,10 +1,13 @@
 import { BadRequestException, Controller, Get } from '@nestjs/common'
 import { ClientProxyRMQ } from '../../proxy'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
 @Controller('api/consults')
 export class ConsultListController {
   constructor(private readonly clientProxy: ClientProxyRMQ) {}
 
+  @ApiBearerAuth()
+  @ApiTags('Consultas')
   @Get()
   async handle() {
     try {
